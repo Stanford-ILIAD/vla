@@ -1,0 +1,9 @@
+# Train and Val data as 1) directory: path/images/, 2) file: path/images.txt, or 3) list: [path1/images/, path2/images/]
+train: ./data/vla-real-train-?.txt  # N images
+val: ./data/val-real-val.txt
+
+# Number of Classes
+nc: 5
+
+# Class Names
+names: ["animal", "spam", "cup", "cube", "soup"]

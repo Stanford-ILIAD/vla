@@ -1,6 +1,6 @@
-# VLA
+# Visual Latent Actions
 
-> **VLA**: Learning Visually Guided Latent Actions for Assistive Teleoperation   
+> Learning Visually Guided Latent Actions for Assistive Teleoperation   
 > Siddharth Karamcheti, Albert Zhai, Dylan Losey, Dorsa Sadigh  
 > *Learning for Dynamics and Control (L4DC), June 2021*
 
@@ -21,6 +21,10 @@ Linux w/ GPUs.
 
 ### Linux w/ GPU & CUDA 11.0
 
+## Usage
+
+### Pretraining a YOLO-v5 Detector
+
 --- 
 
 ## Start-Up (from Scratch)
@@ -33,5 +37,13 @@ run/use this code, look at the Quickstart section above.
 
 ```bash
 # Clone the YoloV5 Code from https://github.com/ultralytics/yolov5/tree/v2.0 (Note Version == 2.0)
-git clone https://github.com/ultralytics/yolov5.git --branch v2.0
+git submodule add https://github.com/ultralytics/yolov5.git -b v2.0
 ```
+
+---
+
+### Note
+
+This repository was originally written with older versions of PyTorch and PyTorch-Lightning on now deprecated version
+of CUDA. If you run into any problems with the codebase -- please submit an issue, and you can expect a response within
+24 hours! If urgent, please email skaramcheti@cs.stanford.edu with "VLA Codebase" in the subject line!
