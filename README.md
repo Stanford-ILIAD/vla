@@ -68,11 +68,57 @@ libfranka C++ controllers.
 
 #### Pretraining a YOLO-v5 Detector
 
+To pretrain a YOLO-v5 detector, please follow the detailed the directions in the README in the `pretrain-detector/`
+directory. You will need to collect a series of images of different objects on your workspace in various positions,
+annotate them (helper script provided), then use the `yolov5/` submodule to train a YOLO-v5 model from scratch. 
+
+The README walks you through each of these steps.
+
 #### Collecting Kinesthetic Demonstrations with the Franka Emika Panda Arm
+
+After pretraining the YOLO-v5 detector, you need to collect a set of kinesthetic demonstrations (usually from 3 - 10) 
+for each task/object in your dataset. Code for recording kinesthetic demonstrations can be found in `record.py` in
+the top-level directory of this repository. You should run this script once for each task/object you care about (e.g.,
+when collecting 10 demonstrations for pushing a can north, run with:
+
+```bash
+# Name should contain the object name, demonstration path should be consistent across all tasks/objects!
+python record.py --name can-north --demonstration_path demos/
+``` 
+
+Note that we call custom libfranka C++ code (`readState`) to monitor robot joint positions for collecting 
+demonstrations. For reproducibility, all low-level robot code we use can be found in `robot/low-level`. You will need
+to follow the directions here to build this for your Robot: https://frankaemika.github.io/docs/installation_linux.html 
 
 #### Training a YOLO + Latent Actions Model
 
+After collecting demonstrations (assuming demos pickle files are saved in `demos/`), you can train a Visually-Guided
+Latent Actions model. To do this, use `train.py` at the top-level of this repository:
+
+```bash
+# Pass in path to demonstrations, classes = [list of names of objects]
+python train.py --demonstrations demos/ --n_classes 3 --classes apple banana cherry --yolo_model <path to yolo>
+```
+
+This will train a conditional auto-encoder with our default (from paper) hyperparameters; feel free to edit and change
+these as you see fit. This will store a final model checkpoint in `checkpoints/` with the current code; feel free to
+edit this as well.
+
 #### Assistive Teleoperation w/ Visually Guided Latent Actions
+
+Finally, after training a visually grounded latent actions model, you can use it to assist in teleoperation, using the
+top-level script `teleoperate.py`:
+
+```bash
+# Run teleoperation WITHOUT Latent Actions (Pure End-Effector Control)
+python teleoperate.py --model endeff
+
+# Run teleoperation WITH Latent Actions (Make sure to change `CHECKPOINT` to point to the LA model checkpoint!)
+python teleoperate.py --model la --yolo_model <path to yolo> --n_classes 3
+```
+
+This runs latent actions assisted teleoperation with our default parameters; please tweak and change these to better
+suit your usecase, robot workspace, controllers, etc.
 
 --- 
 
@@ -120,4 +166,6 @@ pip install black matplotlib opencv-python pygame typed-argument-parser
 
 This repository was originally written with older versions of PyTorch and PyTorch-Lightning on now deprecated version
 of CUDA. If you run into any problems with the codebase -- please submit an issue, and you can expect a response within
-24 hours! If urgent, please email skaramcheti@cs.stanford.edu with "VLA Codebase" in the subject line!
+24 hours! 
+
+If urgent, please email skaramcheti@cs.stanford.edu with "VLA Code" in the subject line!

@@ -36,8 +36,8 @@ class ArgumentParser(Tap):
 
     # YOLO-v5 Parameters
     model: str = "la"                                           # Teleoperation mode in <endeff | la (latent actions)>
-    yolo_model: str                                             # Path to in-domain pretrained YOLO-v5 Detector
-    n_classes: int                                              # Number of Total Object Classes
+    yolo_model: str = None                                      # Path to in-domain pretrained YOLO-v5 Detector
+    n_classes: int = -1                                         # Number of Total Object Classes
 
     # Control Parameters
     latent_dim: int = 1                                         # Dimensionality of Latent Space (match Joystick input)
